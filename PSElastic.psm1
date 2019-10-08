@@ -38,3 +38,31 @@ function Get-Elasticdata{
     }
     
 }
+
+
+function Convert-Elasticdata {
+    [CmdletBinding()]
+    param(
+    [Parameter(ValueFromPipeline)]$item,
+    $inputtype,
+    $resulttype
+    )
+    
+    switch($inputtype){
+    
+        netflow {
+            switch($resulttype){
+                toptalkers {
+                    $item.aggregations.source.buckets | ForEach-Object {
+                        [pscustomobject]@{
+                            host = $_.key
+                            totalbytes = $_.totalbytes.value
+                        }
+                    }
+                }
+            }
+        }
+    
+    }
+    
+}
