@@ -55,8 +55,9 @@ function Convert-Elasticdata {
                 toptalkers {
                     $item.aggregations.source.buckets | ForEach-Object {
                         [pscustomobject]@{
-                            host = $_.key
-                            totalbytes = $_.totalbytes.value
+                            Host = $_.key
+    
+                            Megabytes = [math]::round($_.totalbytes.value/1MB, 1)
                         }
                     }
                 }
@@ -66,3 +67,4 @@ function Convert-Elasticdata {
     }
     
 }
+    
