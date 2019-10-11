@@ -67,10 +67,18 @@ function Convert-Elasticdata {
             switch ($resulttype){
                 failedlogons {
                     $logon=$item.hits.hits._source | where {$_.message -like "*authentication error*"}
-                    $logon | ForEach-Object{
+                    $failedlogons=$logon | ForEach-Object{
                         [pscustomobject]@{
                             username = $_.pfsense_USER
                             source_IP = $_.message.split(":")[2]
+                        }
+                    }
+                    $failedlogons.username | sort | Get-Unique | ForEach-Object {
+                        $tinput=$_
+                        [pscustomobject]@{
+                            username = $_
+                            source_IP=($failedlogons | where {$_.username -eq $tinput}).source_IP | Get-Unique
+                            attempts=($failedlogons | where {$_.username -eq $tinput}).count
                         }
                     }
                 }
