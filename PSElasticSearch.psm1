@@ -67,9 +67,11 @@ function Convert-Elasticdata {
             switch ($resulttype){
                 failedlogons {
                     $logon=$item.hits.hits._source | where {$_.message -like "*authentication error*"}
-                    [pscustomobjct]@{
-                        username = $logon.pfsense_USER
-                        source_IP = $logon.split(":")[2]
+                    $logon | ForEach-Object{
+                        [pscustomobject]@{
+                            username = $_.pfsense_USER
+                            source_IP = $_.message.split(":")[2]
+                        }
                     }
                 }
             }
