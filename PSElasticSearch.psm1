@@ -63,8 +63,19 @@ function Convert-Elasticdata {
                 }
             }
         }
+        pfsense {
+            switch ($resulttype){
+                failedlogons {
+                    $logon=$item.hits.hits._source | where {$_.message -like "*authentication error*"}
+                    [pscustomobjct]@{
+                        username = $logon.pfsense_USER
+                        source_IP = $logon.split(":")[2]
+                    }
+                }
+            }
+        }
     
     }
-    
+     
 }
     
