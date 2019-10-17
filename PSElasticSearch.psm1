@@ -84,6 +84,13 @@ function Convert-Elasticdata {
                 }
             }
         }
+        auditbeat {
+            switch ($resulttype){
+                usbstorage {
+                    $item.hits.hits._source
+                }
+            }
+        }
     
     }
      
