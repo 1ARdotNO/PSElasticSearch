@@ -57,7 +57,7 @@ function Convert-Elasticdata {
                         [pscustomobject]@{
                             Host = $_.key
     
-                            Megabytes = [math]::round($_.totalbytes.value/1MB, 1)
+                            Megabytes = [math]::round($_.totalbytes.value/1MB, 0)
                         }
                     }
                 }
@@ -84,13 +84,7 @@ function Convert-Elasticdata {
                 }
             }
         }
-        auditbeat {
-            switch ($resulttype){
-                usbstorage {
-                    $item.hits.hits._source
-                }
-            }
-        }
+        
     
     }
      
