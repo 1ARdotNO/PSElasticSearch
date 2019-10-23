@@ -61,6 +61,15 @@ function Convert-Elasticdata {
                         }
                     }
                 }
+                topprotocols {
+                    $item.aggregations.source.buckets | ForEach-Object {
+                        [pscustomobject]@{
+                            protocol = $_.key
+    
+                            Megabytes = [math]::round($_.totalbytes.value/1MB, 0)
+                        }
+                    }
+                }
             }
         }
         pfsense {
