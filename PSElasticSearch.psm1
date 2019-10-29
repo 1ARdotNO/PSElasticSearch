@@ -64,7 +64,7 @@ function Convert-Elasticdata {
                 topprotocols {
                     $item.aggregations.source.buckets | ForEach-Object {
                         [pscustomobject]@{
-                            protocol = $_.key
+                            Protocol = $_.key
     
                             Megabytes = [math]::round($_.totalbytes.value/1MB, 0)
                         }
@@ -88,6 +88,23 @@ function Convert-Elasticdata {
                             username = $_
                             source_IP=($failedlogons | where {$_.username -eq $tinput}).source_IP | Get-Unique
                             attempts=($failedlogons | where {$_.username -eq $tinput}).count
+                        }
+                    }
+                }
+            }
+        }
+        windows {
+            switch ($resulttype){
+                failedlogons {
+                    $totalcount=$item.aggregations.source.buckets.doc_count | ForEach-Object {$sum+=[int]$_;$sum}
+                    [PSCustomObject]@{
+                        Username = "Total"
+                        "Failed Attempts" = $totalcount
+                    }
+                    $item.aggregations.source.buckets | ForEach-Object {
+                        [PSCustomObject]@{
+                            Username = $_.key
+                            "Failed Attempts" = $_.doc_count
                         }
                     }
                 }
