@@ -96,7 +96,7 @@ function Convert-Elasticdata {
         windows {
             switch ($resulttype){
                 failedlogons {
-                    $totalcount=$item.aggregations.source.buckets.doc_count | ForEach-Object {$sum+=[int]$_;$sum}
+                    $item.aggregations.source.buckets.doc_count | ForEach-Object {$totalcount+=[int]$_}
                     [PSCustomObject]@{
                         Username = "Total"
                         "Failed Attempts" = $totalcount
