@@ -116,7 +116,7 @@ function Convert-Elasticdata {
                              time = "$($_."@timestamp" | get-date)"
                              audit = $_.keywords.replace("Audit ","")
                         }
-                   }
+                   } | sort $_.path | Get-Unique -AsString
                 }
             }
         }
