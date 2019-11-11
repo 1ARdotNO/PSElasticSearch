@@ -108,6 +108,16 @@ function Convert-Elasticdata {
                         }
                     }
                 }
+                fileDLP {
+                    $item.hits.hits._source | ForEach-Object {
+                        [pscustomobject]@{
+                             user = $_.event_data.SubjectUserName
+                             path = $_.event_data.ObjectName
+                             time = "$($_."@timestamp" | get-date)"
+                             audit = $_.keywords.replace("Audit ","")
+                        }
+                   }
+                }
             }
         }
         
