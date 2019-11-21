@@ -91,6 +91,16 @@ function Convert-Elasticdata {
                         }
                     }
                 }
+                openvpnfailedlogons{
+                    $logon=$item.hits.hits._source
+                    $logon | ForEach-Object{
+                        [pscustomobject]@{
+                            username = $_.message.split("'")[1]
+                            time = $_."@timestamp" | get-date
+                        }
+                    }
+                
+                }
             }
         }
         windows {
