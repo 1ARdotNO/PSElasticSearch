@@ -26,8 +26,24 @@ function Get-Elasticdata{
         do{
             $scrollreqresult=$null #reset variable so that end of results can be detected
             $scrollreqresult=Invoke-RestMethod -Uri "http://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' #get scroll results 10 at a time
-            $scrollreqresult #output scroll results
+            
+            [psobject[]]$_scroll_id += $scrollreqresult._scroll_id
+            [psobject[]]$timed_out += $scrollreqresult.timed_out
+            [psobject[]]$_shards += $scrollreqresult._shards
+            [psobject[]]$hits += $scrollreqresult.hits
+            [int]$took+=[int]$scrollreqresult.took #temp to calculate total time
+
+            #$scrollreqresult #output scroll results
+            
         }while($scrollreqresult.hits.hits)#loop to output scroll results while there are results being delivered by elastic
+        [pscustomobject]@{
+            _scroll_id = $_scroll_id
+            took =+ $took
+            timed_out = $timed_out
+            _shards = $_shards
+            hits = $hits
+        }
+        
     }
     else{ #If no scroll do query and return specified number of results
         if ($simplequery -and !$body){ #if check for simple or complex query
@@ -38,7 +54,6 @@ function Get-Elasticdata{
     }
     
 }
-
 
 function Convert-Elasticdata {
     [CmdletBinding()]
@@ -101,22 +116,40 @@ function Convert-Elasticdata {
                     }
                 
                 }
+                firewallblocktop{
+                    $item.aggregations.source.buckets | foreach-object {
+                        [PSCustomObject]@{
+                            IP = $_.key
+                            Attempts = $_.doc_count
+                        }
+                    }
+                }
             }
         }
         windows {
             switch ($resulttype){
                 failedlogons {
-                    $item.aggregations.source.buckets.doc_count | ForEach-Object {$totalcount+=[int]$_}
-                    [PSCustomObject]@{
-                        Username = "Total"
-                        "Failed Attempts" = $totalcount
-                    }
-                    $item.aggregations.source.buckets | ForEach-Object {
-                        [PSCustomObject]@{
-                            Username = $_.key
-                            "Failed Attempts" = $_.doc_count
+                    $events=$item.hits.hits._source | ForEach-Object {
+                        [pscustomobject]@{
+                            Username = $_.event_data.targetusername
+                            Time = ($_."@timestamp" | get-date -Format "dd.MM.yyyy HH:mm:ss").ToString()
                         }
                     }
+                    $uniquevents=$events | sort time | Get-Unique -AsString
+                    #totalcount
+                    [pscustomobject]@{
+                        Username ="Total"
+                        "Failed attempts"= $uniquevents.count
+                    }
+                    $uniquevents.username | sort | get-unique -asstring | ForEach-Object {
+                        $tinput=$_
+                        $count=($uniquevents | where {$_.username -eq $tinput}).count
+                        if(!$count){$count=1} #For error where 1 count is recorded as NULL
+                        [pscustomobject]@{
+                            Username = $_
+                            "Failed attempts" = $count
+                        }
+                    } | sort "Failed attempts" -Descending
                 }
                 fileDLP {
                     $item.hits.hits._source | ForEach-Object {
@@ -135,4 +168,3 @@ function Convert-Elasticdata {
     }
      
 }
-    
