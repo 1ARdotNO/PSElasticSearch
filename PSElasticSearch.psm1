@@ -23,15 +23,25 @@ function Get-Elasticdata{
             scroll_id = "$($scrollrequest._scroll_id)"
         } | ConvertTo-Json
         #loop all scroll results
+        #output hits from initial request
+        
+        [System.Collections.Generic.List[Object]]$_scroll_id += $scrollrequest._scroll_id
+        [System.Collections.Generic.List[Object]]$timed_out += $scrollrequest.timed_out.tostring()
+        [System.Collections.Generic.List[Object]]$_shards += $scrollrequest._shards
+        [System.Collections.Generic.List[Object]]$hits += $scrollrequest.hits
+        [System.Collections.Generic.List[Object]]$aggregations += $scrollrequest.aggregations
+        [int]$took+=[int]$scrollreqresult.took #temp to calculate total time
+
         do{
-            $scrollreqresult=$null #reset variable so that end of results can be detected
+            #$scrollreqresult=$null #reset variable so that end of results can be detected
             $scrollreqresult=Invoke-RestMethod -Uri "http://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' #get scroll results 10 at a time
             
-            [System.Collections.Generic.List[Object]]$_scroll_id += $scrollreqresult._scroll_id
-            [System.Collections.Generic.List[Object]]$timed_out += $scrollreqresult.timed_out.tostring()
-            [System.Collections.Generic.List[Object]]$_shards += $scrollreqresult._shards
-            [System.Collections.Generic.List[Object]]$hits += $scrollreqresult.hits
+            $_scroll_id += $scrollreqresult._scroll_id
+            $timed_out += $scrollreqresult.timed_out.tostring()
+            $_shards += $scrollreqresult._shards
+            $hits += $scrollreqresult.hits
             [int]$took+=[int]$scrollreqresult.took #temp to calculate total time
+
 
             #$scrollreqresult #output scroll results
             
@@ -42,6 +52,7 @@ function Get-Elasticdata{
             timed_out = $timed_out
             _shards = $_shards
             hits = $hits
+            aggregations=$aggregations
         }
         
     }
@@ -168,3 +179,4 @@ function Convert-Elasticdata {
     }
      
 }
+
