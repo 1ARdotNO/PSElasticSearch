@@ -27,10 +27,10 @@ function Get-Elasticdata{
             $scrollreqresult=$null #reset variable so that end of results can be detected
             $scrollreqresult=Invoke-RestMethod -Uri "http://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' #get scroll results 10 at a time
             
-            [psobject[]]$_scroll_id += $scrollreqresult._scroll_id
-            [psobject[]]$timed_out += $scrollreqresult.timed_out
-            [psobject[]]$_shards += $scrollreqresult._shards
-            [psobject[]]$hits += $scrollreqresult.hits
+            [System.Collections.Generic.List[Object]]$_scroll_id += $scrollreqresult._scroll_id
+            [System.Collections.Generic.List[Object]]$timed_out += $scrollreqresult.timed_out.tostring()
+            [System.Collections.Generic.List[Object]]$_shards += $scrollreqresult._shards
+            [System.Collections.Generic.List[Object]]$hits += $scrollreqresult.hits
             [int]$took+=[int]$scrollreqresult.took #temp to calculate total time
 
             #$scrollreqresult #output scroll results
@@ -38,7 +38,7 @@ function Get-Elasticdata{
         }while($scrollreqresult.hits.hits)#loop to output scroll results while there are results being delivered by elastic
         [pscustomobject]@{
             _scroll_id = $_scroll_id
-            took =+ $took
+            took = $took
             timed_out = $timed_out
             _shards = $_shards
             hits = $hits
