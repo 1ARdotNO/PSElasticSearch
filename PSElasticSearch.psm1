@@ -132,6 +132,7 @@ function Convert-Elasticdata {
                         [PSCustomObject]@{
                             IP = $_.key
                             Attempts = $_.doc_count
+                            Country = $_.source.buckets.key
                         }
                     }
                 }
