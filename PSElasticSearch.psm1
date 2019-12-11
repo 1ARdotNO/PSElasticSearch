@@ -194,6 +194,18 @@ function Convert-Elasticdata {
                         }
                     }
                 }
+                adchanges{
+                    $item.hits.hits._source | ForEach-Object {
+                        [pscustomobject]@{
+                            Time = ($_."@timestamp" | get-date).tostring()
+                            Changedby = $_.event_data.subjectusername
+                            TargetUser = if($_.event_data.oldtargetusername){"$($_.event_data.oldtargetusername)->$($_.event_data.newtargetusername)"}else{$_.event_data.targetusername}
+                            EventID = $_.event_id
+                            Reason = $_.message.split([Environment]::NewLine)[0]
+                            
+                        }
+                    }
+                }
             }
         }
         
