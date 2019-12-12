@@ -5,6 +5,7 @@ function Get-Elasticdata {
         $server,
         [string]$port = "9200",
         [switch]$scroll,
+        [switch]$count,
         $size = 100,
         $simplequery
     )
@@ -57,6 +58,16 @@ function Get-Elasticdata {
             aggregations = $aggregations
         }
         
+    }
+    elseif ($count) {
+        #If count do query and return count
+        if ($simplequery -and !$body) {
+            #if check for simple or complex query
+            Invoke-RestMethod -Uri "http://$server`:$port/$index/_count/?q=$simplequery" -Method get -ContentType 'application/json'
+        }
+        else {
+            Invoke-RestMethod -Uri "http://$server`:$port/$index/_count/" -Body $body -Method post -ContentType 'application/json'
+        }
     }
     else {
         #If no scroll do query and return specified number of results
@@ -185,23 +196,23 @@ function Convert-Elasticdata {
                         $NewACLObject.SetSecurityDescriptorSddlForm($_.event_data.newsd)
                         [PSCustomObject]@{
                             Changedby = $_.event_data.subjectusername
-                            Item = $_.event_data.ObjectName
-                            OldPerms = $OldACLObject
-                            NewPerms = $NewACLObject
-                            Diff = $newaclobject.AccessToString.split([Environment]::NewLine) | foreach-object {
-                                $_ | where {$oldaclobject.AccessToString.split([Environment]::NewLine) -notcontains $_ }
+                            Item      = $_.event_data.ObjectName
+                            OldPerms  = $OldACLObject
+                            NewPerms  = $NewACLObject
+                            Diff      = $newaclobject.AccessToString.split([Environment]::NewLine) | foreach-object {
+                                $_ | where { $oldaclobject.AccessToString.split([Environment]::NewLine) -notcontains $_ }
                             }
                         }
                     }
                 }
-                adchanges{
+                adchanges {
                     $item.hits.hits._source | ForEach-Object {
                         [pscustomobject]@{
-                            Time = ($_."@timestamp" | get-date).tostring()
-                            Changedby = $_.event_data.subjectusername
-                            TargetUser = if($_.event_data.oldtargetusername){"$($_.event_data.oldtargetusername)->$($_.event_data.newtargetusername)"}else{$_.event_data.targetusername}
-                            EventID = $_.event_id
-                            Reason = $_.message.split([Environment]::NewLine)[0]
+                            Time       = ($_."@timestamp" | get-date).tostring()
+                            Changedby  = $_.event_data.subjectusername
+                            TargetUser = if ($_.event_data.oldtargetusername) { "$($_.event_data.oldtargetusername)->$($_.event_data.newtargetusername)" }else { $_.event_data.targetusername }
+                            EventID    = $_.event_id
+                            Reason     = $_.message.split([Environment]::NewLine)[0]
                             
                         }
                     }
@@ -213,3 +224,5 @@ function Convert-Elasticdata {
     }
      
 }
+
+
