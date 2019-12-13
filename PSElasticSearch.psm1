@@ -225,4 +225,134 @@ function Convert-Elasticdata {
      
 }
 
+function New-Elasticindex{
+    param(
+        $index,
+        $shards=1,
+        $replicas=1,
+        $server,
+        [string]$port = "9200",
+        [switch]$https,
+        $username,
+        $password
+    )
 
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+
+    $body= @{
+        settings =@{
+            number_of_shards = $shards
+            number_of_replicas = $replicas
+        }
+    } | ConvertTo-json
+
+    if($body){
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index" -Headers $header -Method put -ContentType 'application/json' -Body $body
+    }
+
+}
+
+
+function Get-Elasticindex{
+    param(
+        $server,
+        [string]$port = "9200",
+        [switch]$https,
+        $username,
+        $password
+    )
+
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+    #Do webrequest for index list
+    Invoke-RestMethod -Uri "$protocol`://$server`:$port/_all" -Headers $header -Method Get -ContentType 'application/json'
+
+}
+
+function Add-ElasticData{
+    param(
+        $index,
+        $body,
+        $server,
+        [string]$port = "9200",
+        [switch]$https,
+        $username,
+        $password,
+        $CreateIndexIfNotExist
+    )
+
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+
+    if($body){
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/doc" -Headers $header -Method post -ContentType 'application/json' -Body $body
+    }
+
+}
+
+function Set-ElasticData{
+    param(
+        $index,
+        $body,
+        $server,
+        $docid,
+        [string]$port = "9200",
+        [switch]$https,
+        $username,
+        $password,
+        $CreateDocIfNotExist
+    )
+
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+
+    if($body){
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_update/$docid" -Headers $header -Method post -ContentType 'application/json' -Body $body
+    }
+
+}
