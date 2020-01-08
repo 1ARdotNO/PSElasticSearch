@@ -7,17 +7,32 @@ function Get-Elasticdata {
         [switch]$scroll,
         [switch]$count,
         $size = 100,
-        $simplequery
+        $simplequery,
+        [switch]$https
     )
     
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+
     if ($scroll) {
         #Send query and get scroll id for retrieval
         if ($simplequery -and !$body) {
             #if check for simple or complex query
-            $scrollrequest = Invoke-RestMethod -Uri "http://$server`:$port/$index/_search/?q=$simplequery&scroll=1m" -Method get -ContentType 'application/json'
+            $scrollrequest = Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_search/?q=$simplequery&scroll=1m" -Method get -ContentType 'application/json' -Headers $header
         }
         else {
-            $scrollrequest = Invoke-RestMethod -Uri "http://$server`:$port/$index/_search/?scroll=1m" -Body $body -Method post -ContentType 'application/json'
+            $scrollrequest = Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_search/?scroll=1m" -Body $body -Method post -ContentType 'application/json' -Headers $header
         }
         
         #build object for scroll result retrival
@@ -37,7 +52,7 @@ function Get-Elasticdata {
 
         do {
             #$scrollreqresult=$null #reset variable so that end of results can be detected
-            $scrollreqresult = Invoke-RestMethod -Uri "http://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' #get scroll results 10 at a time
+            $scrollreqresult = Invoke-RestMethod -Uri "$protocol`://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' -Headers $header #get scroll results 10 at a time
             
             $_scroll_id += $scrollreqresult._scroll_id
             $timed_out += $scrollreqresult.timed_out.tostring()
@@ -63,20 +78,20 @@ function Get-Elasticdata {
         #If count do query and return count
         if ($simplequery -and !$body) {
             #if check for simple or complex query
-            Invoke-RestMethod -Uri "http://$server`:$port/$index/_count/?q=$simplequery" -Method get -ContentType 'application/json'
+            Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_count/?q=$simplequery" -Method get -ContentType 'application/json' -Headers $header
         }
         else {
-            Invoke-RestMethod -Uri "http://$server`:$port/$index/_count/" -Body $body -Method post -ContentType 'application/json'
+            Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_count/" -Body $body -Method post -ContentType 'application/json' -Headers $header
         }
     }
     else {
         #If no scroll do query and return specified number of results
         if ($simplequery -and !$body) {
             #if check for simple or complex query
-            Invoke-RestMethod -Uri "http://$server`:$port/$index/_search/?q=$simplequery&size=$size" -Method get -ContentType 'application/json'
+            Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_search/?q=$simplequery&size=$size" -Method get -ContentType 'application/json' -Headers $header
         }
         else {
-            Invoke-RestMethod -Uri "http://$server`:$port/$index/_search/?size=$size" -Body $body -Method post -ContentType 'application/json'
+            Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_search/?size=$size" -Body $body -Method post -ContentType 'application/json' -Headers $header
         }
     }
     
@@ -355,4 +370,23 @@ function Set-ElasticData{
         Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_update/$docid" -Headers $header -Method post -ContentType 'application/json' -Body $body
     }
 
+}
+
+
+function Get-ESMetricData{
+    param(
+        $index,
+        $server,
+        $metric="all",
+        [string]$port = "9200",
+        $username,
+        $password
+    )
+
+    switch($metric){
+        memroy {
+            Get-Elasticdata -index $index -server $server -port $port -size 1 -simplequery "metricset.name:memory"
+        }
+    }
+    
 }
