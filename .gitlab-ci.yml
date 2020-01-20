@@ -5,9 +5,8 @@
 image: mcr.microsoft.com/powershell:preview
 
 before_script:
-  - echo "Before script section"
-  - echo "For example you might run an update here or install a build dependency"
-  - echo "Or perhaps you might print out some debugging details"
+  #installdotnet dependencies
+  - curl -ssl https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
 
 after_script:
   - echo "After script section"
@@ -17,6 +16,4 @@ build1:
   stage: build
   script:
     - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
-    - echo $K8S_SECRET_psgalleryapikey
-    - echo $psgalleryapikey
 
