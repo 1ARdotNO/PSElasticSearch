@@ -16,7 +16,7 @@ after_script:
 build1:
   stage: build
   script:
-    - ls -l
+    - powershell "Publish-Module -Path . -NuGetApiKey $K8S_SECRET_psgalleryapikey"
 
 test1:
   stage: test
