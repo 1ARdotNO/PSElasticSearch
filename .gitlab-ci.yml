@@ -16,6 +16,7 @@ after_script:
 build1:
   stage: build
   script:
-    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $K8S_SECRET_psgalleryapikey"
+    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
     - echo $K8S_SECRET_psgalleryapikey
+    - echo $psgalleryapikey
 
