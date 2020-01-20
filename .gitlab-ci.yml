@@ -15,7 +15,7 @@ build1:
   stage: build
   script:
      #installdotnet dependencies
-     - apt update
+    - apt update
     - apt install wget -y
     - wget https://dot.net/v1/dotnet-install.sh 
     - ./dotnet-install.sh --channel 2.0 
