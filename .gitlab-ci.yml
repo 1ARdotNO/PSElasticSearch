@@ -17,5 +17,5 @@ build1:
      #installdotnet dependencies
     - curl -ssl https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 2.0 --install-dir /cli
     #run publish
-    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
+    - pwsh-preview -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
 
