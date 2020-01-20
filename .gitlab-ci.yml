@@ -5,8 +5,7 @@
 image: mcr.microsoft.com/powershell:preview
 
 before_script:
-  #installdotnet dependencies
-  - curl -ssl https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
+    -echo "before!"
 
 after_script:
   - echo "After script section"
@@ -15,5 +14,8 @@ after_script:
 build1:
   stage: build
   script:
+     #installdotnet dependencies
+    - curl -ssl https://dot.net/v1/dotnet-install.sh | bash /dev/stdin
+    #run publish
     - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
 
