@@ -16,7 +16,7 @@ after_script:
 build1:
   stage: build
   script:
-    - echo "Do your build here"
+    - ls -l
 
 test1:
   stage: test
