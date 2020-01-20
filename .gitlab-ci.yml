@@ -5,7 +5,7 @@
 image: mcr.microsoft.com/powershell:preview
 
 before_script:
-    -echo "before!"
+    - echo "before!"
 
 after_script:
   - echo "After script section"
