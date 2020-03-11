@@ -22,5 +22,5 @@ build1:
     - ./dotnet-install.sh --channel 2.0 
     - rm dotnet-install.sh
     #run publish
-    - pwsh-preview -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
+    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
 
