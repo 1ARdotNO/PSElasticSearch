@@ -5,16 +5,7 @@
 image: mcr.microsoft.com/powershell:latest
 
 before_script:
-    - echo "before!"
-
-after_script:
-  - echo "After script section"
-  - echo "For example you might do some cleanup here"
-
-build1:
-  stage: build
-  script:
-     #installdotnet dependencies
+#installdotnet dependencies
     - apt update
     - apt install wget -y
     - apt install sudo -y
@@ -28,6 +19,15 @@ build1:
     - sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
     - apt update
     - apt install dotnet-sdk-3.1 -y
+
+after_script:
+  - echo "After script section"
+  - echo "For example you might do some cleanup here"
+
+build1:
+  stage: build
+  script:
+
     #run publish
-    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
+    - pwsh -Command "Publish-Module -force -Path . -NuGetApiKey $psgalleryapikey"
 
