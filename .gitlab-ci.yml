@@ -29,5 +29,5 @@ build1:
   script:
 
     #run publish
-    - pwsh -Command "Publish-Module -force -Path . -NuGetApiKey $psgalleryapikey"
+    - pwsh -Command "if((Test-ModuleManifest .\pselasticsearch.psd1).version -gt (find-module pselasticsearch).version){Publish-Module -force -Path . -NuGetApiKey $psgalleryapikey}{'Same version!'}"
 
