@@ -26,7 +26,7 @@ build1:
     - sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
     - sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
     - apt update
-    -apt install dotnet-sdk-3.1 -y
+    - apt install dotnet-sdk-3.1 -y
     #run publish
     - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
 
