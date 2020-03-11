@@ -2,7 +2,7 @@
 # see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
 
 # you can delete this line if you're not using Docker
-image: mcr.microsoft.com/powershell:preview
+image: mcr.microsoft.com/powershell:latest
 
 before_script:
     - echo "before!"
@@ -17,10 +17,17 @@ build1:
      #installdotnet dependencies
     - apt update
     - apt install wget -y
-    - wget https://dot.net/v1/dotnet-install.sh 
-    - chmod a+x dotnet-install.sh
-    - ./dotnet-install.sh --channel 2.0 
-    - rm dotnet-install.sh
+    - apt install sudo -y
+    - apt install apt-transport-https -y
+    - apt install gnupg2 -y
+    - wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+    - sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+    - wget -q https://packages.microsoft.com/config/debian/10/prod.list
+    - sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+    - sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+    - sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+    - apt update
+    - apt install dotnet-sdk-3.1 -y
     #run publish
-    - pwsh-preview -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
+    - pwsh -Command "Publish-Module -Path . -NuGetApiKey $psgalleryapikey"
 
