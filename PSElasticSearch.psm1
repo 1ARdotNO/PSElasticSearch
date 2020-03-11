@@ -244,7 +244,7 @@ function New-Elasticindex{
     param(
         $index,
         $shards=1,
-        $replicas=1,
+        $replicas=0,
         $server,
         [string]$port = "9200",
         [switch]$https,
@@ -370,23 +370,4 @@ function Set-ElasticData{
         Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_update/$docid" -Headers $header -Method post -ContentType 'application/json' -Body $body
     }
 
-}
-
-
-function Get-ESMetricData{
-    param(
-        $index,
-        $server,
-        $metric="all",
-        [string]$port = "9200",
-        $username,
-        $password
-    )
-
-    switch($metric){
-        memroy {
-            Get-Elasticdata -index $index -server $server -port $port -size 1 -simplequery "metricset.name:memory"
-        }
-    }
-    
 }
