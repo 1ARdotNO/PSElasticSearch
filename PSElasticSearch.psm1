@@ -337,6 +337,14 @@ function Add-ElasticData{
         Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
     }
 
+    if($CreateIndexIfNotExist){
+        if((Get-Elasticindex -server $server -port $port -username $username -password $password -index $index | where {$_ -like "*$index*"}).count -eq 1){
+            #index exists, do nothing
+        }else{
+            New-Elasticindex -server $server -port $port -username $username -password $password -index $index | out-null
+        }
+    }
+
     if($body){
         Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/doc" -Headers $header -Method post -ContentType 'application/json' -Body $body
     }
