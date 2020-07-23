@@ -286,7 +286,8 @@ function Get-Elasticindex{
         [string]$port = "9200",
         [switch]$https,
         $username,
-        $password
+        $password,
+        $index
     )
 
     #Set protocol for requests
@@ -303,7 +304,10 @@ function Get-Elasticindex{
         Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
     }
     #Do webrequest for index list
-    Invoke-RestMethod -Uri "$protocol`://$server`:$port/_all" -Headers $header -Method Get -ContentType 'application/json'
+    if($index){Invoke-RestMethod -Uri "$protocol`://$server`:$port/_all/$index" -Headers $header -Method Get -ContentType 'application/json'}
+    else{
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/_all" -Headers $header -Method Get -ContentType 'application/json'
+    }
 
 }
 
