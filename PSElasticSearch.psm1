@@ -383,3 +383,34 @@ function Set-ElasticData{
     }
 
 }
+function Remove-Elasticdoc{
+    param(
+        $index,
+        $server,
+        $docid,
+        [string]$port = "9200",
+        [switch]$https,
+        $username,
+        $password
+    )
+
+    #Set protocol for requests
+    If($https){
+        $protocol="https"
+    }else{$protocol="http"}
+
+    #if username and password is provided
+    if($username -and $password){
+        $server="$username`:$password@$server"
+    }
+    #cCreate header for auth
+    $header= @{
+        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+    }
+
+    if($body){
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_doc/$docid" -Headers $header -Method delete -ContentType 'application/json'
+    }
+
+}
+
