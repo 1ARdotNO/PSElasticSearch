@@ -168,6 +168,20 @@ function Convert-Elasticdata {
                 }
             }
         }
+        gcp {
+            switch ($resulttype) {
+                fileDLP {
+                    $item.hits.hits._source | ForEach-Object {
+                        [pscustomobject]@{
+                            user  = $_.protoPayload.authenticationInfo.principalEmail
+                            path  = "$($_.resource.labels.project_id)/$($_.protoPayload.resourceName)"
+                            time  = "$($_."@timestamp" | get-date)"
+                            audit = $_.protoPayload.methodName
+                        }
+                    } | sort $_.path | Get-Unique -AsString
+                }
+            }
+        }
         windows {
             switch ($resulttype) {
                 failedlogons {
