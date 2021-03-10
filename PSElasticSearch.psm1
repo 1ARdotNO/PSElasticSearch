@@ -72,7 +72,11 @@ function Get-Elasticdata {
             hits         = $hits
             aggregations = $aggregations
         }
-        
+        #Delete scroll after done
+        $scrolldeletebody=[pscustomobject]@{
+            scroll_id = "$($scrollrequest._scroll_id)"
+        } | ConvertTo-Json
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/_search/scroll" -Body $scrolldeletebody -Method Delete -ContentType 'application/json' -Headers $header
     }
     elseif ($count) {
         #If count do query and return count
