@@ -2,7 +2,7 @@ function Get-Elasticdata {
     param(
         $index,
         $body,
-        $server,
+        $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$scroll,
         [switch]$count,
@@ -263,7 +263,7 @@ function New-Elasticindex{
         $index,
         $shards=1,
         $replicas=0,
-        $server,
+        $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
         $username,
@@ -300,7 +300,7 @@ function New-Elasticindex{
 
 function Get-Elasticindex{
     param(
-        $server,
+        $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
         $username,
@@ -333,7 +333,7 @@ function Add-ElasticData{
     param(
         $index,
         $body,
-        $server,
+        $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
         $username,
@@ -373,7 +373,7 @@ function Set-ElasticData{
     param(
         $index,
         $body,
-        $server,
+        $server=$ENV:ELASTICSERVER,
         $docid,
         [string]$port = "9200",
         [switch]$https,
