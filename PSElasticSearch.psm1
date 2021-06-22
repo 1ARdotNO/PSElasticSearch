@@ -306,7 +306,7 @@ function Get-Elasticindex{
         [string]$port = "9200",
         [switch]$https,
         $username=$ENV:ELASTICUSER,
-        $password=$ENV:ELASTICPASSWORD
+        $password=$ENV:ELASTICPASSWORD,
         $index
     )
 
