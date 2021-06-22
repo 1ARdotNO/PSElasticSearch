@@ -12,7 +12,7 @@
     RootModule = 'PSElasticSearch'
     
     # Version number of this module.
-    ModuleVersion = '1.2.20'
+    ModuleVersion = '1.2.21'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
