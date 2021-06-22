@@ -1,3 +1,23 @@
+function Ignore-certificate {
+    Add-Type @"
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAllCertsPolicy : ICertificatePolicy {
+    public bool CheckValidationResult(
+    ServicePoint srvPoint, X509Certificate certificate,
+    WebRequest request, int certificateProblem) {
+        return true;
+    }
+}
+"@
+
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+
+# Set Tls versions
+$allProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $allProtocols
+}
+
 function Get-Elasticdata {
     param(
         $index,
@@ -13,6 +33,10 @@ function Get-Elasticdata {
         $password=$ENV:ELASTICPASSWORD
     )
     
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
+
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
@@ -110,7 +134,9 @@ function Convert-Elasticdata {
         $inputtype,
         $resulttype
     )
-    
+    if ($ENV:ELASTICIGNORECERT){
+    Ignore-certificate
+    }
     switch ($inputtype) {
     
         netflow {
@@ -271,7 +297,9 @@ function New-Elasticindex{
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD
     )
-
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
@@ -309,7 +337,9 @@ function Get-Elasticindex{
         $password=$ENV:ELASTICPASSWORD,
         $index
     )
-
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
@@ -342,7 +372,9 @@ function Add-ElasticData{
         $password=$ENV:ELASTICPASSWORD,
         $CreateIndexIfNotExist
     )
-
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
@@ -383,7 +415,9 @@ function Set-ElasticData{
         $password=$ENV:ELASTICPASSWORD,
         $CreateDocIfNotExist
     )
-
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
@@ -413,7 +447,9 @@ function Remove-Elasticdoc{
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD
     )
-
+    if ($ENV:ELASTICIGNORECERT){
+        Ignore-certificate
+    }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
