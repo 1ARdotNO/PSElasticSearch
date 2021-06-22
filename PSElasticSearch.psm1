@@ -8,11 +8,13 @@ function Get-Elasticdata {
         [switch]$count,
         $size = 100,
         $simplequery,
-        [switch]$https
+        [switch]$https,
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD
     )
     
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
@@ -266,12 +268,12 @@ function New-Elasticindex{
         $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
-        $username,
-        $password
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD
     )
 
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
@@ -303,13 +305,13 @@ function Get-Elasticindex{
         $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
-        $username,
-        $password,
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD
         $index
     )
 
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
@@ -336,13 +338,13 @@ function Add-ElasticData{
         $server=$ENV:ELASTICSERVER,
         [string]$port = "9200",
         [switch]$https,
-        $username,
-        $password,
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD,
         $CreateIndexIfNotExist
     )
 
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
@@ -377,13 +379,13 @@ function Set-ElasticData{
         $docid,
         [string]$port = "9200",
         [switch]$https,
-        $username,
-        $password,
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD,
         $CreateDocIfNotExist
     )
 
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
@@ -408,12 +410,12 @@ function Remove-Elasticdoc{
         $docid,
         [string]$port = "9200",
         [switch]$https,
-        $username,
-        $password
+        $username=$ENV:ELASTICUSER,
+        $password=$ENV:ELASTICPASSWORD
     )
 
     #Set protocol for requests
-    If($https){
+    If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
         $protocol="https"
     }else{$protocol="http"}
 
