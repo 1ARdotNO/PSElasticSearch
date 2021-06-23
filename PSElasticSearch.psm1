@@ -1,4 +1,8 @@
 function Ignore-certificate {
+    if($islinux){
+        $PSDefaultParameterValues = @{"Invoke-Restmethod:SkipCertificateCheck"=$True}
+    }else{
+        
     Add-Type @"
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -16,6 +20,8 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
 # Set Tls versions
 $allProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $allProtocols
+
+    }
 }
 
 function Get-Elasticdata {
