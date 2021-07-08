@@ -470,7 +470,7 @@ function Remove-Elasticdoc{
         Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
     }
 
-    if($body){
+    if($docid){
         Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/_doc/$docid" -Headers $header -Method delete -ContentType 'application/json'
     }
 
