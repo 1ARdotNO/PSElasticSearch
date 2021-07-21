@@ -446,7 +446,7 @@ function Set-ElasticData{
 function Remove-Elasticdoc{
     param(
         $index,
-        $server,
+        $server=$ENV:ELASTICSERVER,
         $docid,
         [string]$port = "9200",
         [switch]$https,
