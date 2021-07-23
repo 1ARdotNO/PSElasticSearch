@@ -376,7 +376,8 @@ function Add-ElasticData{
         [switch]$https,
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
-        $CreateIndexIfNotExist
+        $CreateIndexIfNotExist,
+        [switch]$ForceRefresh
     )
     if ($ENV:ELASTICIGNORECERT){
         if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
@@ -402,8 +403,10 @@ function Add-ElasticData{
             New-Elasticindex -server $server -port $port -username $username -password $password -index $index | out-null
         }
     }
-
-    if($body){
+    if($body -and $ForceRefresh){
+        Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/doc?refresh=wait_for" -Headers $header -Method post -ContentType 'application/json' -Body $body
+    }
+    elseif($body){
         Invoke-RestMethod -Uri "$protocol`://$server`:$port/$index/doc" -Headers $header -Method post -ContentType 'application/json' -Body $body
     }
 
