@@ -32,20 +32,3 @@ jobs:
         id: my-script
         with:
           script: 'Publish-Module -force -Path . -NuGetApiKey ${{ secrets.PS_GALLERY_KEY }}'
-      #- name: Create folder
-      #  run: mkdir PSElasticSearch
-      #- name: Copy files
-      #  uses: canastro/copy-action@0.0.2
-      #  with:
-          # Source file
-      #    source: "*.ps*"
-          # Target file
-       #   target: PSElasticSearch/
-
-      #- name: Publish PowerShell Module
-       # uses: pcgeek86/publish-powershell-module-action@v20
-      #  with:
-       #   # The filesystem path to the module to import into the environment.
-          #modulePath: module
-          # The NuGet API Key for PowerShell Gallery, with permission to push this module.
-       #   NuGetApiKey: ${{ secrets.PS_GALLERY_KEY }}
