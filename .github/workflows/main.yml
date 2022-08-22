@@ -25,19 +25,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Create folder
-        run: mkdir module
+        run: mkdir PSElasticSearch
       - name: Copy files
         uses: canastro/copy-action@0.0.2
         with:
           # Source file
           source: "*.ps*"
           # Target file
-          target: module/
+          target: PSElasticSearch/
 
       - name: Publish PowerShell Module
         uses: pcgeek86/publish-powershell-module-action@v20
         with:
           # The filesystem path to the module to import into the environment.
-          modulePath: module
+          #modulePath: module
           # The NuGet API Key for PowerShell Gallery, with permission to push this module.
           NuGetApiKey: ${{ secrets.PS_GALLERY_KEY }}
