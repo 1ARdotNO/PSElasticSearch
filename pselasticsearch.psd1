@@ -9,7 +9,7 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule = 'PSElasticSearch'
+    RootModule = 'pselasticsearch'
     
     # Version number of this module.
     ModuleVersion = '1.2.29'
