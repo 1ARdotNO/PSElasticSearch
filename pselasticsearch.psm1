@@ -54,7 +54,7 @@ function Get-Elasticdata {
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
 
     if ($scroll) {
@@ -317,7 +317,7 @@ function New-Elasticindex{
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
 
     $body= @{
@@ -357,7 +357,7 @@ function Get-Elasticindex{
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
     #Do webrequest for index list
     if($index){Invoke-RestMethod -Uri "$protocol`://$server`:$port/_cat/indices/$index" -Headers $header -Method Get -ContentType 'application/json'}
@@ -393,7 +393,7 @@ function Add-ElasticData{
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
 
     if($CreateIndexIfNotExist){
@@ -438,7 +438,7 @@ function Set-ElasticData{
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
 
     if($body){
@@ -470,7 +470,7 @@ function Remove-Elasticdoc{
     }
     #cCreate header for auth
     $header= @{
-        Authorization = "Basic $(ConvertTo-Base64 -InputString "$username`:$password")"
+        Authorization = "Basic $(ConvertTo-Base64 "$username`:$password")"
     }
 
     if($docid){
