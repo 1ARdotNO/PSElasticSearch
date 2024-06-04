@@ -40,7 +40,7 @@ function Get-Elasticdata {
     )
     
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
 
     #Set protocol for requests
@@ -141,7 +141,7 @@ function Convert-Elasticdata {
         $resulttype
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     switch ($inputtype) {
     
@@ -304,7 +304,7 @@ function New-Elasticindex{
         $password=$ENV:ELASTICPASSWORD
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
@@ -344,7 +344,7 @@ function Get-Elasticindex{
         $index
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
@@ -380,7 +380,7 @@ function Add-ElasticData{
         [switch]$ForceRefresh
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
@@ -425,7 +425,7 @@ function Set-ElasticData{
         $CreateDocIfNotExist
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
@@ -457,7 +457,7 @@ function Remove-Elasticdoc{
         $password=$ENV:ELASTICPASSWORD
     )
     if ($ENV:ELASTICIGNORECERT){
-        if($islinux){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
+        if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
     #Set protocol for requests
     If(($https) -or ($ENV:ELASTICHTTPS -EQ "TRUE")){
