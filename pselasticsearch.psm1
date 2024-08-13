@@ -87,7 +87,7 @@ function Get-Elasticdata {
             $scrollreqresult = Invoke-RestMethod -Uri "$protocol`://$server`:$port/_search/scroll" -Body $scrollgetbody -Method post -ContentType 'application/json' -Headers $header #get scroll results 10 at a time
             
             $_scroll_id += $scrollreqresult._scroll_id
-            $timed_out += $scrollreqresult.timed_out.tostring()
+            $timed_out += if($scrollreqresult.timed_out){$scrollreqresult.timed_out.tostring()}else{$null}
             $_shards += $scrollreqresult._shards
             $hits += $scrollreqresult.hits
             [int]$took += [int]$scrollreqresult.took #temp to calculate total time
