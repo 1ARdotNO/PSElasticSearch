@@ -36,9 +36,14 @@ function Get-Elasticdata {
         $simplequery,
         [switch]$https,
         $username=$ENV:ELASTICUSER,
-        $password=$ENV:ELASTICPASSWORD
+        $password=$ENV:ELASTICPASSWORD,
+        $path #Add support for path in the url
     )
     
+    if($path){
+        $port="$port$path"
+    }
+
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
@@ -302,7 +307,12 @@ function New-Elasticindex{
         [switch]$https,
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD
+        $path #Add support for path in the url
     )
+    
+    if($path){
+        $port="$port$path"
+    }
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
@@ -342,7 +352,12 @@ function Get-Elasticindex{
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
         $index
+        $path #Add support for path in the url
     )
+    
+    if($path){
+        $port="$port$path"
+    }
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
@@ -378,7 +393,12 @@ function Add-ElasticData{
         $password=$ENV:ELASTICPASSWORD,
         $CreateIndexIfNotExist,
         [switch]$ForceRefresh
+        $path #Add support for path in the url
     )
+    
+    if($path){
+        $port="$port$path"
+    }
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
@@ -423,7 +443,12 @@ function Set-ElasticData{
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
         $CreateDocIfNotExist
+        $path #Add support for path in the url
     )
+    
+    if($path){
+        $port="$port$path"
+    }
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
@@ -455,7 +480,12 @@ function Remove-Elasticdoc{
         [switch]$https,
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD
+        $path #Add support for path in the url
     )
+    
+    if($path){
+        $port="$port$path"
+    }
     if ($ENV:ELASTICIGNORECERT){
         if($islinux -or $IsMacOS){$PSDefaultParameterValues = @{"Invoke-RestMethod:SkipCertificateCheck"=$True}}else{Ignore-certificate}
     }
