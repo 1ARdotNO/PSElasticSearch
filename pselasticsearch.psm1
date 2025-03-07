@@ -306,7 +306,7 @@ function New-Elasticindex{
         [string]$port = "9200",
         [switch]$https,
         $username=$ENV:ELASTICUSER,
-        $password=$ENV:ELASTICPASSWORD
+        $password=$ENV:ELASTICPASSWORD,
         $path #Add support for path in the url
     )
     
@@ -351,7 +351,7 @@ function Get-Elasticindex{
         [switch]$https,
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
-        $index
+        $index,
         $path #Add support for path in the url
     )
     
@@ -392,7 +392,7 @@ function Add-ElasticData{
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
         $CreateIndexIfNotExist,
-        [switch]$ForceRefresh
+        [switch]$ForceRefresh,
         $path #Add support for path in the url
     )
     
@@ -442,7 +442,7 @@ function Set-ElasticData{
         [switch]$https,
         $username=$ENV:ELASTICUSER,
         $password=$ENV:ELASTICPASSWORD,
-        $CreateDocIfNotExist
+        $CreateDocIfNotExist,
         $path #Add support for path in the url
     )
     
@@ -479,7 +479,7 @@ function Remove-Elasticdoc{
         [string]$port = "9200",
         [switch]$https,
         $username=$ENV:ELASTICUSER,
-        $password=$ENV:ELASTICPASSWORD
+        $password=$ENV:ELASTICPASSWORD,
         $path #Add support for path in the url
     )
     
